@@ -1,0 +1,44 @@
+# syntax=docker/dockerfile:1.4
+
+# Build stage (Alpine, multi-arch)
+FROM alpine:3.18 AS builder
+
+RUN apk add --no-cache \
+    build-base \
+    cmake \
+    clang \
+    llvm \
+    git \
+    jemalloc-dev \
+    liburing-dev \
+    openssl-dev \
+    linux-headers \
+    hiredis-dev \
+    curl \
+    curl-dev \
+    util-linux-dev \
+    libunwind-dev
+
+WORKDIR /keydb
+
+# Clone KeyDB source code
+RUN git clone https://github.com/Snapchat/KeyDB.git . && \
+    git submodule update --init --recursive
+
+# Build both keydb-server and keydb-cli without jemalloc
+RUN make -j$(nproc) USE_JEMALLOC=no keydb-server keydb-cli
+
+# Final stage (lightweight runtime)
+FROM alpine:3.18 AS runtime
+
+RUN apk add --no-cache \
+    jemalloc \
+    liburing \
+    openssl \
+    hiredis
+
+COPY --from=builder /keydb/src/keydb-server /usr/local/bin/keydb-server
+COPY --from=builder /keydb/src/keydb-cli /usr/local/bin/keydb-cli
+
+EXPOSE 6379
+ENTRYPOINT ["keydb-server"]
