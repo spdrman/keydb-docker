@@ -55,7 +55,7 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-        outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=https://raw.githubusercontent.com/joeferner/redis-commander/refs/heads/master/README.md,annotation-index.org.opencontainers.image.source=https://github.com/joeferner/redis-commander
+        outputs: type=image,name=target
 
   update-description:
     runs-on: ubuntu-latest
