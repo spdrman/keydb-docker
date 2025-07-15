@@ -57,20 +57,20 @@ jobs:
         cache-to: type=gha,mode=max
         outputs: type=image,name=target
 
-  update-description:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  #update-description:
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - name: Checkout
+  #      uses: actions/checkout@v4
 
-      - name: Download remote README
-        run: curl -o ./README.md https://raw.githubusercontent.com/joeferner/redis-commander/master/README.md
+  #    - name: Download remote README
+  #      run: curl -o ./README.md https://raw.githubusercontent.com/joeferner/redis-commander/master/README.md
 
-      - name: Update Docker Hub description
-        uses: peter-evans/dockerhub-description@v3
-        with:
-          username: watr
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: watr/keydb
-          readme-filepath: ./README.md
-          short-description: "Alpine image for redis-commander - Redis management tool."
+  #    - name: Update Docker Hub description
+  #      uses: peter-evans/dockerhub-description@v3
+  #      with:
+  #        username: watr
+  #        password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #        repository: watr/keydb
+  #        readme-filepath: ./README.md
+  #        short-description: "Alpine image for redis-commander - Redis management tool."
